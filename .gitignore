@@ -14,3 +14,4 @@ amanosign/output_dev.yml
 amanosign/output_prod.yml
 amanosign/.gradle
 amanosign/build
+.vscode/settings.json
