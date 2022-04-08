@@ -1,0 +1,117 @@
+body{
+    font-size: 14px;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    line-height: 1.42857143;
+    color: #565656;
+}
+
+.pageTitle{
+    font-size: 20px;
+    font-weight: bold;
+    color:#333;
+}
+
+.pageTitle:before{
+    content: "";
+    display: inline-block;
+    width: 19px;
+    height: 22px;
+    margin: 0 7px 0 0;
+}
+.pageTitle.receiveTitle:before {
+    background: url(img/icon_receive_red.png)left 0 top 6px no-repeat;
+    background-size:18px;
+}
+
+.mainContent{
+    padding: 30px;
+    width: 100%;
+}
+
+/* button */
+
+button{
+    color:#fff;
+    padding: 8px 30px 8px 55px;
+    border:none;
+    border-radius:6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #7b7b7b;
+    background:#b90114;
+}
+
+button:hover{opacity: .8;}
+button:focus{outline: none;}
+
+button.btnBase{padding: 8px;width: 100%;}
+
+
+/* table */
+#confirm_content table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#confirm_content th{
+    background-color:#f9f9f9;
+    padding: 10px;
+    border:1px solid #b5b5b5;
+}
+#confirm_content td{
+    padding: 10px;
+    border:1px solid #b5b5b5;
+    position: relative;
+    vertical-align: middle;
+}
+
+#confirm_content td:nth-child(3),
+#confirm_content td:nth-child(4){width: 12%;}
+#confirm_content td:nth-child(5){width: 15%;text-align: center;}
+
+
+@media screen and (max-width: 599px) {
+
+    .pageTitle{margin: 0;}
+
+    .menu_wrap{
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -ms-align-items: flex-start;
+        align-items: flex-start;
+    }
+    .btn{margin-left: 0;width: 100%;height: auto;}
+    .createFolderBtn, .downloadBtn{width: 100%;}
+    .downloadBtn{margin: 10px 0 0 0;}
+    .uploadBtn i{
+        position:absolute;
+        left:35px;
+        top:50%;
+        transform:translateY(-50%);
+    }
+
+    .scroll table{width:100%;}
+    .scroll{
+        overflow: auto;
+        white-space: nowrap;
+    }
+    .scroll::-webkit-scrollbar{height: 5px;}
+    .scroll::-webkit-scrollbar-track{background: #F1F1F1;}
+    .scroll::-webkit-scrollbar-thumb {background: #BCBCBC;}
+
+    .scroll table thead{display: none;}
+
+}
+
+.electronic-stamp-button:hover {
+    opacity: 1;
+}
+#cc-printStampBtn {
+    padding-left: 30px;
+}
+
+#cc-request-message {
+    padding: 8px 9px;
+    background-color: #f8f9fa;
+    white-space: pre-wrap;
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>＜先方確認中＞契約書一覧 | 電子契約サービス CloudContract（クラウドコントラクト）</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="plugins/jQuery-contextMenu/jquery.contextMenu.min.css">
+    <link rel="stylesheet" href="plugins/tablesorter/tablesorter.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/sent.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+    <header id="header"></header>
+    <div id="ccerror" style="display:none;">
+        <p>しばらく経っても画面が表示されない場合は、<a href="./index.html">こちら</a> をクリックしてください。</p>
+    </div>
+    <div class="main">
+        <aside id="sidebar"></aside>
+        <div class="mainContent">
+            <p class="confirmTitle pageTitle">先方確認中</p>
+            <div id="confirm_content">
+                <div class="scroll">
+                    <table class="tablesorter-default" id="cc-sent-table">
+                        <thead>
+                        <tr>
+                            <th>契約書ファイル名</th>
+                            <th>送信先</th>
+                            <th>有効期限</th>
+                            <th>メール送信日時</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="cc-docslist">
+                        </tbody>
+                    </table>
+                </div><!-- /.scroll -->
+                <div class="loader-wrap">
+                    <div class="loader overlay">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="" id="modal-default" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 class="modal-title"><span id="modal-doc-name">契約書</span> を本当に削除しますか？</h4>
+                    <h5>
+                        ・削除した契約書は元に戻すことはできません。<br/>
+                        ・契約書が削除されたことは、送付先に通知されません。
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" onclick="_close_delete_modal();">キャンセル</button>
+                    <button id="delete-btn" type="button" class="cc-btn cc-btn-danger" onclick="deleteDocument();">
+                        <i class="fa fa-refresh fa-spin" style="display:none;"></i><span>削除する</span>
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="" id="modal-resend" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 class="modal-title">契約書を再送しますか？</h4>
+                    <h5>
+                        ・再送することで有効期限が変更されます。
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <button id="cc-cancelBtn" type="button" class="btn btn-default pull-left" onclick="_close_resend_modal();">キャンセル</button>
+                    <button id="resend-btn" type="button" class="cc-btn cc-btn-danger" onclick="resendDocument();">
+                        <i class="fa fa-refresh fa-spin" style="display:none;"></i><span>再送する</span>
+                    </button>
+                    <input type="hidden" id="resend-key" value="">
+                    <input type="hidden" id="resend-email" value="">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer id="footer"></footer>
+
+    <!-- aws cognito sdk //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <script src="./v0/js/aws-cognito-sdk.min.js"></script>
+    <script src="./v0/js/amazon-cognito-identity.min.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+    <!-- REQUIRED JS SCRIPTS -->
+    <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="dist/js/app.min.js"></script>
+    <!-- Other Plugins -->
+    <script src="plugins/jQuery-contextMenu/jquery.contextMenu.min.js"></script>
+    <script src="plugins/jQuery-contextMenu/jquery.ui.position.min.js"></script>
+    <script src="plugins/tablesorter/jquery.tablesorter.min.js"></script>
+    <script src="plugins/tablesorter/customparser.js"></script>
+    <!-- CContract App -->
+    <script src="./v0/js/et-account.js"></script>
+    <script src="./v0/js/cc-common.js"></script>
+    <script src="./v0/js/cc-sent.js"></script>
+    <script>
+        $('#delete-btn').click(function() {
+            $(this).addClass("disabled");
+            $(this).find(".fa-spin").attr("style", "margin-right:10px;");
+            $(this).find("span").text("削除中...");
+        })
+		$(document).ready(function() {
+			$('#cc-sent-table').tablesorter({
+				headers: {
+					4:{ sorter: false },
+					5:{ sorter: false }
+                },
+                sortList: [[3,1]]
+			});
+		});
+    </script>
+</body>
+
+</html>

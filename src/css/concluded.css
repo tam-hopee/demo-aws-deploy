@@ -1,0 +1,394 @@
+body{
+    font-size: 14px;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    line-height: 1.42857143;
+    color: #565656;
+}
+
+.pageTitle{
+    font-size: 20px;
+    font-weight: bold;
+    color:#333;
+}
+
+.pageTitle:before{
+    content: "";
+    display: inline-block;
+    width: 19px;
+    height: 22px;
+    margin: 0 7px 0 0;
+}
+.pageTitle.concludedTitle:before {
+    background: url(img/icon_check_red.png)left 0 top 3px no-repeat;
+    background-size:18px;
+}
+.concluded_wrap h2{
+    color: #b90114;
+    margin: 0;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.mainContent{
+    padding: 30px;
+    width: 100%;
+}
+
+/* menu button */
+.menu_wrap{
+    margin: 0 0 50px;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;
+    justify-content: space-between;
+    -ms-align-items: flex-end;
+    align-items: flex-end;
+    border-bottom: 2px solid #b90114;
+    padding: 0 0 2px;
+}
+
+.home_link{
+    width: 20px;
+}
+.home_link img{width: 100%;}
+.btn{margin-left: auto;height: 36px;}
+
+.createFolderBtn,
+.downloadBtn,
+.uploadBtn{
+    color:#fff;
+    padding: 8px 30px 8px 55px;
+    border:none;
+    border-radius:6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #7b7b7b;
+}
+.createFolderBtn:hover,
+.downloadBtn:hover,
+.uploadBtn:hover{opacity: .8;}
+.createFolderBtn:focus,
+.downloadBtn:focus,
+.uploadBtn:focus{outline: none;}
+
+.createFolderBtn{
+    background:url(img/icon_folder.png)left 35px center no-repeat, #b90114;
+}
+.downloadBtn{
+    background:url(img/icon_download.png)left 35px center no-repeat, #b90114;
+    margin:0 0 0 10px;
+}
+.uploadBtn{
+    width: 100%;
+    background:#b90114;position:relative;
+    margin-top: 13px;
+}
+
+/* table */
+#concluded_content table,
+#upload_content table,
+#trash_content table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#concluded_content th,
+#upload_content th,
+#trash_content th{
+    background-color:#f9f9f9;
+    padding: 10px;
+    border:1px solid #b5b5b5;
+}
+#concluded_content td,
+#upload_content td,
+#trash_content td{
+    padding: 10px;
+    border:1px solid #b5b5b5;
+    position: relative;
+    width: 20%;
+    vertical-align: middle;
+}
+#concluded_content td:nth-child(3){width: 12%;}
+#concluded_content td:nth-child(6){width: 9%;padding: 5px;}
+#concluded_content td:nth-child(6){text-align: center;}
+
+#upload_content td{width:30.3%;}
+#upload_content td:nth-child(4){width: 9%;padding: 5px;text-align: center;}
+
+#trash_content td{width: 45.5%;}
+#trash_content td:nth-child(3){width: 9%;padding: 5px;text-align: center;}
+
+/* table parts*/
+#concluded_content table input,
+#upload_content table input,
+#trash_content table input{
+    padding: 10px 35px 10px 10px;
+    border:1px solid #b90114;
+    border-radius:6px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+#concluded_content .plus{
+    content:"";
+    display: block;
+    width: 20px;
+    height: 18px;
+    background:url(img/icon_plus.png)center no-repeat;
+    position:absolute;
+    right: 5px;
+    top: calc(50% - 9px);
+    transform: translate(-50%);
+    border:none;
+    cursor: pointer;
+}
+
+.btnOpen{
+    background:#b90114;
+    color:#fff;
+    padding: 5px 10px;
+    border:none;
+    border-radius:6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #7b7b7b;
+}
+
+#concluded_content .plus:hover,
+.btnOpen:hover{opacity: .8;}
+#concluded_content .plus:focus,
+.btnOpen:focus{outline: none;}
+
+
+/* tab */
+.tabs {
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px auto;
+    position: relative;
+}
+.tabs:before{
+    content: "";
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #b5b5b5;
+    position: absolute;
+    top:49px;
+    z-index:1;
+}
+
+
+/*タブのスタイル*/
+.tab_item {
+  width: 250px;
+  height: 50px;
+  border: 1px solid #b5b5b5;
+  background-color: #f9f9f9;
+  line-height: 50px;
+  font-size: 16px;
+  text-align: center;
+  color: #565656;
+  display: block;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  z-index:10;
+}
+.tab_item:hover{cursor: pointer;background-color: #e0e0e0;}
+
+
+.tab_item.tab01{
+    border-radius: 10px 0 0 0;
+    border-right:none;
+    margin-left:50px;
+}
+.tab_item.tab01:before{
+    content:"";
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    background:url(img/icon_check_gray.png)0 center no-repeat;
+    background-size:contain;
+    margin-right: 5px;
+}
+.tab_item.tab02{border-radius: 0;border-right:none;}
+.tab_item.tab02:before{
+    content:"";
+    display: inline-block;
+    width: 15px;
+    height: 14px;
+    background:url(img/icon_upload_gray.png)0 center no-repeat;
+    background-size:contain;
+    margin-right: 5px;
+}
+.tab_item.tab03{border-radius: 0 10px 0 0;}
+.tab_item.tab03:before{
+    content:"";
+    display: inline-block;
+    width: 15px;
+    height: 14px;
+    background:url(img/icon_trash_gray.png)0 center no-repeat;
+    background-size:contain;
+    margin-right: 5px;
+}
+
+/*ラジオボタンを全て消す*/
+input[name="tab_item"] {
+  display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+  display: none;
+  padding: 50px 50px 0;
+  clear: both;
+  overflow: hidden;
+}
+
+
+/*選択されているタブのコンテンツのみを表示*/
+#concluded:checked ~ #concluded_content,
+#upload:checked ~ #upload_content,
+#trash:checked ~ #trash_content {
+  display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.tabs input:checked + .tab_item {
+    background-color: #fff;
+    color: #b90114;
+    border-bottom:1px solid #fff;
+    z-index: 2;
+    position: relative;
+}
+.tabs input:checked + .tab_item.tab01:before{
+    background:url(img/icon_check_red.png)0 center no-repeat;
+    background-size:contain;
+}
+.tabs input:checked + .tab_item.tab02:before {
+    background:url(img/icon_upload_red.png)0 center no-repeat;
+    background-size:contain;
+}
+.tabs input:checked + .tab_item.tab03:before {
+    background:url(img/icon_trash_red.png)0 center no-repeat;
+    background-size:contain;
+}
+
+/* 締結済のコンテンツ */
+#concluded_content{
+
+}
+/* アップロードのコンテンツ */
+#upload_content{
+
+}
+
+.upload_btn{padding: 0 0 80px;}
+#upload_content .scroll{margin-top: 20px;}
+
+/* ゴミ箱のコンテンツ */
+#trash_content{
+
+}
+
+/* search_box */
+.search_box{
+    position: relative;
+    margin: 0 0 10px;
+}
+input[name="search"] {
+    padding: 10px 10px 10px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius:6px;
+    border:2px solid #b5b5b5;
+    background:#f9f9f9;
+}
+.sbtn{
+    position: absolute;
+    top:10px;
+    left:0px;
+    background:none;
+    border:none;
+}
+.sbtn img{width: 20px;padding: 0 10px;}
+.sbtn:hover{opacity: .8;}
+input[name="s"]:focus,
+.sbtn:focus{outline: none;}
+
+
+@media screen and (max-width: 1000px) {
+
+.tab_content{padding: 50px 20px 0;}
+.tab_item{width: 180px;}
+.tab_item.tab01{margin-left: 20px;}
+
+}
+
+
+@media screen and (max-width: 599px) {
+
+.pageTitle{margin: 0;}
+.tab_content{padding: 50px 10px 0;}
+.tab_item{width: 33%;font-size: 13px;}
+.tab_item.tab01{margin-left: 0;}
+
+.menu_wrap{
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: row;
+    -ms-align-items: flex-start;
+    align-items: flex-start;
+}
+.btn{margin-left: 0;width: 100%;height: auto;}
+.createFolderBtn, .downloadBtn{width: 100%;}
+.downloadBtn{margin: 10px 0 0 0;}
+.uploadBtn i{
+    position:absolute;
+    left:35px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.scroll table{width:100%;}
+.scroll{
+    overflow: auto;
+    white-space: nowrap;
+}
+.scroll::-webkit-scrollbar{height: 5px;}
+.scroll::-webkit-scrollbar-track{background: #F1F1F1;}
+.scroll::-webkit-scrollbar-thumb {background: #BCBCBC;}
+.scroll table thead{display: none;}
+
+#upload_content .scroll{margin-top: 10px;}
+}
+
+.btn {
+    margin-left: auto;
+}
+
+.breadcrumb {
+    padding: 8px 15px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    list-style: none;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+}
+.breadcrumb > li {
+    display: inline-block;
+}
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+.breadcrumb > .active {
+    color: #777;
+}

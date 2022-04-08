@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>管理画面TOP | 電子契約サービス CloudContract（クラウドコントラクト）</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="plugins/tablesorter/tablesorter.css">
+    <link rel="stylesheet" href="main/main.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<header id="header"></header>
+<div class="main">
+    <aside id="sidebar"></aside>
+    <section class="mainContent">
+        <p class="mainTitle">管理画面TOP</p>
+        <div class="wrap">
+            <div class="step">
+                <div class="stepInner i01 linkbox">
+                    <p>契約書の送信<img src="main/img/step1.png" alt="契約書の新規アップロード"></p>
+                    <a href="./upload.html"></a>
+                </div>
+                <p class="note">契約書の新規アップロード</p>
+            </div>
+            <div class="arrow"></div>
+            <div class="step">
+                <div class="stepInner i02 linkbox">
+                    <p>先方確認中<img src="main/img/step2.png" alt=""></p>
+                    <a href="./sent.html"></a>
+                </div>
+                <p class="note">先方にて確認中の契約書</p>
+            </div>
+            <div class="arrow"></div>
+            <div class="step">
+                <div class="stepInner i03 linkbox">
+                    <p>締結済み<img src="main/img/step3.png" alt=""></p>
+                    <a href="./concluded.html"></a>
+                </div>
+                <p class="note">締結済みの契約書</p>
+            </div>
+        </div><!-- /.wrap -->
+        <div class="wrap">
+            <div class="status">
+                <div class="statusInner linkbox">
+                    <p>社内稟議中</p>
+                    <a href="./review.html"></a>
+                </div>
+                <p class="note">社内で稟議中の契約書</p>
+            </div>
+            <div class="status">
+                <div class="statusInner linkbox">
+                    <p>却下</p>
+                    <a href="./dismissal.html"></a>
+                </div>
+                <p class="note">先方により却下された契約書</p>
+            </div>
+            <div class="status">
+                <div class="statusInner linkbox">
+                    <p>受信</p>
+                    <a href="./index.html"></a>
+                </div>
+                <p class="note">CloudContract同士の契約</p>
+            </div>
+        </div><!-- /.wrap -->
+    </section><!-- /.mainContent -->
+</div>
+<footer id="footer"></footer>
+<!-- aws cognito sdk //-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+<script src="./v0/js/aws-cognito-sdk.min.js"></script>
+<script src="./v0/js/amazon-cognito-identity.min.js"></script>
+<!-- aws apigateway sdk //-->
+<script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+<script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+<!-- REQUIRED JS SCRIPTS -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="dist/js/app.min.js"></script>
+<script src="plugins/tablesorter/jquery.tablesorter.min.js"></script>
+<script src="plugins/tablesorter/customparser.js"></script>
+<!-- CContract App -->
+<script src="./v0/js/et-account.js"></script>
+<script src="./v0/js/cc-common.js"></script>
+<script src="./v0/js/cc-main.js"></script>
+</body>
+
+</html>

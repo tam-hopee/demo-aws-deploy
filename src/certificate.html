@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>合意締結証明書 - クラウドコントラクト</title>
+    <!-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="dist/css/paper.css">
+    <style>
+        @page {
+            size: A4
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body class="A4">
+    <div id="main">
+        <!-- Each sheet element should have the class "sheet" -->
+        <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+        <section class="sheet padding-10mm">
+            <!-- Write HTML just like a web page -->
+            <div>
+                <div class="box box-primary no-border no-shadow page-header">
+                    <img src="dist/img/cc-logo.png" width="70" alt="CloudContract" />
+                    <small class="pull-right" style="font-size:0.6em;">合意締結証明書</small>
+                </div>
+                <hr/>
+                <table class="table no-border">
+                    <tr>
+                        <td>書類名</td>
+                        <td id="cc-docs-name"><i class="fa fa-refresh fa-spin"></i></td>
+                    </tr>
+                    <tr>
+                        <td>書類ID</td>
+                        <td id="cc-docs-id"><i class="fa fa-refresh fa-spin"></i></td>
+                    </tr>
+                </table>
+                <hr/>
+                <br/><br/>
+                <small>合意締結当事者の情報</small>
+                <hr/>
+                <table class="table no-border">
+                    <tr>
+                        <td id="cc-created-time"><b></b><i class="fa fa-refresh fa-spin"></i></td>
+                        <td>
+                            <p id="cc-sender-mail"><b></b><i class="fa fa-refresh fa-spin"></i></p>
+                            <p>Eメール認証</p>
+                        </td>
+                    </tr>
+                    <tbody id="cc-processed-receivers" style="border-top: 0px !important;">
+                    </tbody>
+                </table>
+            </div>
+            <div style="position: absolute; bottom: 0; margin-bottom:23px; width:97%;">
+                <table class="table no-border">
+                    <tr>
+                        <td>
+                            <small>※ 本証明書は、送信者および各受領者の同意日時を証明する書面です。</small><br/>
+                            <small id="cc-certificate-time"></small>
+                        </td>
+                        <td>
+                            <small>証明書発行：クラウドコントラクト株式会社</small>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- aws cognito sdk //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <script src="./v0/js/aws-cognito-sdk.min.js"></script>
+    <script src="./v0/js/amazon-cognito-identity.min.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+    <!-- REQUIRED JS SCRIPTS -->
+    <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="dist/js/app.min.js"></script>
+    <script src="plugins/cryptoJS/aes.js"></script>
+    <!-- CContract App -->
+    <script src="./v0/js/et-account.js"></script>
+    <script src="./v0/js/cc-common.js"></script>
+    <script src="./v0/js/cc-certificate.js"></script>
+</body>
+
+</html>

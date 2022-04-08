@@ -1,0 +1,26 @@
+pipelines:
+  branches:
+    dev:
+      - step:
+          image: atlassian/pipelines-awscli
+          script: 
+            - aws configure set preview.cloudfront true
+            - aws s3 sync ./src/ s3://app-dev.cloudcontract.jp --exact-timestamps --delete
+            - aws s3 cp ./src/v0/js/et-account-dev.js s3://app-dev.cloudcontract.jp/v0/js/et-account.js
+            - aws s3 cp ./src/v0/apiGateway-js-sdk/apigClient-dev.js s3://app-dev.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient.js
+            - aws s3 rm s3://app-dev.cloudcontract.jp/v0/js/et-account-dev.js
+            - aws s3 rm s3://app-dev.cloudcontract.jp/v0/js/et-account-prod.js
+            - aws s3 rm s3://app-dev.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient-dev.js
+            - aws s3 rm s3://app-dev.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient-prod.js
+    master:
+      - step:
+          image: atlassian/pipelines-awscli
+          script:
+            - aws configure set preview.cloudfront true
+            - aws s3 sync ./src/ s3://app.cloudcontract.jp --exact-timestamps --delete
+            - aws s3 cp ./src/v0/js/et-account-prod.js s3://app.cloudcontract.jp/v0/js/et-account.js
+            - aws s3 cp ./src/v0/apiGateway-js-sdk/apigClient-prod.js s3://app.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient.js
+            - aws s3 rm s3://app.cloudcontract.jp/v0/js/et-account-dev.js
+            - aws s3 rm s3://app.cloudcontract.jp/v0/js/et-account-prod.js
+            - aws s3 rm s3://app.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient-dev.js
+            - aws s3 rm s3://app.cloudcontract.jp/v0/apiGateway-js-sdk/apigClient-prod.js

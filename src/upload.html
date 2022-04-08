@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新規アップロード | 電子契約サービス CloudContract（クラウドコントラクト）</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
+    <link rel="stylesheet" href="css/upload.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="plugins/pdf/text_layer_builder.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+    <header id="header"></header>
+    <div id="ccerror" style="display:none;">
+        <p>しばらく経っても画面が表示されない場合は、<a href="./index.html">こちら</a> をクリックしてください。</p>
+    </div>
+    <div class="main">
+        <aside id="sidebar"></aside>
+        <div class="mainContent">
+            <p class="sendTitle">契約書の送信</p>
+            <div class="send_content">
+                <div class="stepbox step01">
+                    <h3>- Step1. ファイルの選択</h3>
+                    <p>PDFファイルのみ対応、一度にアップロードできるのは最大10MBまでとなります。</p>
+                    <div id="message_docsPost" class="alert" style="display:none;"></div>
+                    <!-- PDF Rendering -->
+                    <div id="cc-pager" class="text-right margin-bottom" style="display:none;">
+                        <p><small>（<span>ページ： <span id="page_num"></span> / <span id="page_count"></span></span>）</small></p>
+                        <button type="button" class="btn btn-default" id="prev">前ページ</button>
+                        <button type="button" class="btn btn-default" id="next">次ページ</button>
+                    </div>
+                    <div id="external-events" style="display:none;">
+                        <div id="cc-container" droppable="true"></div>
+                        <p><small>・任意：パーツをドラッグ＆ドロップすることで、各入力項目（署名エリア等）を追加することができます。</small></p>
+                        <div class="external-event ui-draggable ui-draggable-handle" style="float:left; width:145px;">
+                            <textarea type="text" placeholder="フリーテキスト" class="form-control" style="border-radius:5px;" rows=1></textarea>
+                        </div>
+                        <div style="width: 10px; float: left; height: 44px;"></div>
+                        <div class="external-event ui-draggable ui-draggable-handle" style="float:left;">
+                            <div style="display: flex; align-items: center;">
+                                <input type="checkbox" style="margin-right: 5px; margin-top: 0">
+                                <div class="draggable-checkbox-placeholder">チェックボックス</div>
+                            </div>
+                        </div>
+                        <div style="width: 10px; float: left; height: 44px;"></div>
+                        <div class="external-event ui-draggable ui-draggable-handle" style="float:left;">
+                            <div style="display: flex; align-items: center;">
+                                <button class="electronic-stamp-button" style="border: 1px solid #b5b5b5; background: rgba(255, 255, 255, 0.8); width: 33px; height: 33px; border-radius: 50%; padding: 0; overflow: hidden; box-shadow: none;"></button>
+                                <div class="draggable-electric-stamp-placeholder">押印</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="docsPost_btn" class="fileSelectBtn btn_base btn_fa"><i class="fa fa-fw fa-file-pdf-o"></i>ファイルを選択する</button>
+                    <input type="file" id="cc-fileInput" style="display: none;" />
+                </div><!-- /.step01 -->
+                <div id="cc-loading-step1" class="loader-wrap" style="display: none;">
+                    <div class="loader overlay">Loading...</div>
+                </div>
+
+                <div class="stepbox step02">
+                    <h3>- Step2. 送付先の設定</h3>
+                    <div class="form_group01">
+                        <p class="step_title">契約の種別</p>
+                        <div class="radio_select">
+                            <label><input type="radio" name="ccdocsType" id="ccdocsTypeNormal" value="0" checked="">二者間契約</input></label>
+                            <label><input type="radio" name="ccdocsType" id="ccdocsTypeMultiple" value="1">複数者間契約</input></label>
+                        </div>
+                    </div>
+                    <div class="form_group01">
+                        <p class="step_title">送付先の設定 </p>
+                        <div class="mail_box">
+                            <i class="fa fa-envelope"></i>
+                            <div id="cc-sendmail" class="mail_address">
+                                <input id="cc-sendmail-input-0" name="cc_email" type="email" placeholder="送付先メールアドレス">
+                            </div>
+                        </div>
+                        <p style="display: none;">
+                            <span>送付先 <span id="send_mail_count"></span> 件</span>
+                            <small>（送付先の詳細はStep3.でご確認ください）</small>
+                        </p>
+
+                        <div class="btn">
+                            <button id="uploadCSV_btn" class="uploadCSVBtn btn_base btn_fa w_auto"><i class="fa fa-fw fa-upload"></i>CSVファイルをアップロードする</button>
+                            <small>( <a id="csv-download" href="#" download="sample.csv" onclick="handleCSVDownload()">CSVファイルのサンプルをダウンロードする</a> )</small>
+                        </div>
+                        <input type="file" id="cc-upload-csv" style="display: none;" />
+                        <button id="cc-add-sendmail" class="btn_gray btn_fa"><i class="fa fa-fw fa-plus-square-o"></i> 送付先を追加する</button>
+                    </div>
+
+
+                    <p class="step_title">社内稟議の設定（任意）</p>
+                    <p>指定した確認者へ契約書内容の確認が行える機能です。<br>確認者全員が合意すると契約書は自動的に送付先に送信されます。</p>
+                    <div class="form_group01">
+                        <div class="mail_box">
+                            <i class="fa fa-envelope"></i>
+                            <div id="cc-reviewermail" class="mail_address">
+                                <input id="cc-reviewermail-input-0" name="cc_email" type="email" placeholder="確認先メールアドレス">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="cc-add-reviewermail" class="btn_gray btn_fa"><i class="fa fa-fw fa-plus-square-o"></i>確認先を追加する</button>
+                    <p>メールアドレスを記入し、「上記で設定する」ボタンを押下してください。</p>
+                    <button id="cc-step2Btn" class="settingBtn btn_base btn_fa"><i class="fa fa-fw fa-check-circle-o"></i>上記で設定する</button>
+                </div><!-- /.step02 -->
+
+                <div class="stepbox step03">
+                    <h3>- Step3. 送信内容の確認</h3>
+
+                    <div class="scroll">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <th>項目</th>
+                                <th>設定内容</th>
+                            </tr>
+                            <tr>
+                                <td>契約書</td>
+                                <td>
+                                    <a id="cc-step3-docsinfo" target="_blank">契約書がアップロードされていません</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>契約の種別</td>
+                                <td id="cc-step3-docstype">二者間契約</td>
+                            </tr>
+                            <tr>
+                                <td>送付者</td>
+                                <td id="cc-step3-sender"></td>
+                            </tr>
+                            <tr>
+                                <td>送付先</td>
+                                <td id="cc-step3-receiver-0">送付先が設定されていません</td>
+                            </tr>
+                            <tr>
+                                <td>送付先件数</td>
+                                <td>
+                                    <a href="#" onclick="showCSVEmails()"> <span id="cc-step3-receiver-total-count-0"></span> 件</a>
+                                    <small>（送付先には <span id="send-mail-max-count-2"></span> 件までが表示されます）</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>確認者</td>
+                                <td id="cc-step3-reviewer-0">-</td>
+                            </tr>
+                            <tr>
+                                <td>確認者件数</td>
+                                <td>
+                                    <a href="#" onclick="showReviewerEmails()"> <span id="cc-step3-reviewer-total-count-0"></span> 件</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="cc-loading-step3" class="loader-wrap" style="display: none;">
+                        <div class="loader overlay">Loading...</div>
+                    </div>
+                    <div class="request-message">
+                        <textarea id="cc-request-message" class="form-control" row="4" ></textarea>
+                    </div>
+                    <p>修正したい場合は、各Stepに戻って修正をしてください。</p>
+                    <button id="confirmBtn" class="confirmBtn btn_base btn_fa" onclick="confirmStep3();"><i class="fa fa-fw fa-send-o"></i>上記の内容で確定する</button>
+                </div><!-- /.step03 -->
+            </div><!-- /.send_content -->
+            <div class="modal fade in" id="modal-default" style="display: none; z-Index: 2070;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title">契約書の内容に同意した上、メールを送信しますか？</h4>
+                            <h5>
+                                ・社内稟議が設定されている場合は、確認者のみにメールが送信されます。<br/>
+                                ・確認者全員が合意すると契約書は自動的に送付先に送信されます。
+                            </h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cc-cancelBtn" class="btn btn-default pull-left" onclick="confirmStep3('cancel');">キャンセル</button>
+                            <button type="button" id="cc-sendmailBtn" class="btn_base" onclick="confirmStep3('done');">
+                                <i class="fa fa-refresh fa-spin" style="display:none;"></i><span>送信する</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </div>
+                <!-- /.modal-dialog -->
+            <!-- modal electronic stamp -->
+            <div class="modal fade in" id="modal-electronic-stamp" style="display: none; z-Index: 2070;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4 class="modal-title">押印してください。</h4>
+                            <h5>
+                                会社名や氏名を入力することで擬似的な印影を生成し、押印することができます。<br/>
+                                ※半角・全角スペースを入力した場合はテキストが改行されます。
+                            </h5>
+                            <div class="form-group has-feedback">
+                                <input id="cc-inputElectronicStamp" type="text" class="form-control" placeholder="株式会社クラウドコントラスト">
+                                <div  id="cc-inputElectronicStampError" style="color: #d54f64; display: none">
+                                    文字列の長さを150以下にしてください。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cc-cancelStampBtn" class="btn btn-default pull-left">
+                                <span>キャンセル</span>
+                            </button>
+                            <button type="button" id="cc-printStampBtn" class="btn_base">
+                                <span>押印する</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </div>
+            <!-- /.modal electronic stamp -->
+        </div>
+    </div>
+    <footer id="footer"></footer>
+
+    <!-- aws cognito sdk //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <script src="./v0/js/aws-cognito-sdk.min.js"></script>
+    <script src="./v0/js/amazon-cognito-identity.min.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+    <!-- REQUIRED JS SCRIPTS -->
+    <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="plugins/jQuery/jquery.exresize-latest.js"></script>
+    <script src="plugins/jQueryUI/jquery-ui-1.12.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="dist/js/app.min.js"></script>
+    <script src="plugins/pdf/pdf.js"></script>
+    <script src="plugins/pdf/text_layer_builder.js"></script>
+    <!-- CContract App -->
+    <script src="./v0/js/jquery.md5.js"></script>
+    <script src="./v0/js/et-account.js"></script>
+    <script src="./v0/js/cc-common.js"></script>
+    <script src="./v0/js/cc-upload.js"></script>
+    <script src="./v0/js/cc-pdf.js"></script>
+    <script>
+        var counter_sendmail = 0;
+        $("#cc-add-sendmail").click(function() {
+			counter_sendmail = $("[id^=cc-sendmail-input-]").length;
+            var selector = $("#cc-sendmail");
+            $(selector).clone(true).find("#cc-sendmail-input-0").attr("id", "cc-sendmail-input-" + counter_sendmail).val("").appendTo(selector);
+        });
+        var counter_reviewermail = 0;
+        $("#cc-add-reviewermail").click(function() {
+            counter_reviewermail++;
+            var selector = $("#cc-reviewermail");
+            $(selector).clone(true).find("#cc-reviewermail-input-0").attr("id", "cc-reviewermail-input-" + counter_reviewermail).val("").appendTo(selector);
+        });
+
+        $("#cc-step2Btn").click(function() {
+            $("h1").text("送付内容の確認をしてください。");
+            openbox("#step3");
+            closebox("#step2");
+            closebox("#step1");
+            var mails = $("[id^=cc-sendmail-input-]");
+            var reviewermails = $("[id^=cc-reviewermail-input-]");
+            upload.receivers = [];
+            upload.reviewers = [];
+            mails.each(function(i, v) {
+                if ($(v).val() !== null && $(v).val() !== "" && mailcheck($(v).val())) {
+                    upload.receivers.push($(v).val());
+                }
+            });
+            reviewermails.each(function(i, v) {
+                if ($(v).val() !== null && $(v).val() !== "" && mailcheck($(v).val())) {
+                    upload.reviewers.push($(v).val());
+                }
+            });
+            receiversFromCsv.forEach(function(v){
+                upload.receivers.push(v);
+            });
+            $("#cc-step3-receiver-total-count-0").text(upload.receivers.length);
+            $("#send-mail-count").text(upload.receivers.length);
+
+			$("#cc-step3-reviewer-total-count-0").text(upload.reviewers.length);
+
+            if ($('input[id=ccdocsTypeMultiple]:eq(0)').prop('checked')) {
+                // 複数者契約指定ならtypeを設定する。
+                upload.type = "multiple";
+            } else {
+                // 二者間契約指定ならtypeをnullにする。
+                upload.type = null;
+            }
+            cleaning();
+            confirm();
+            uploadReceivers();
+        });
+
+        $("input[id^='cc-sendmail-input-']").blur(function() {
+            if (!mailcheck($(this).val())) {
+                $(this).parent().after('<div class="cc-sendmail-error alert alert-danger alert-dismissible" style="margin-top: 7px;">メールアドレスが正しい書式で入力されていません。</div>');
+                $("#cc-add-sendmail").attr("disabled", "disabled");
+                $("#cc-step2Btn").attr("disabled", "disabled");
+            } else {
+                $(".cc-sendmail-error").remove();
+                $("#cc-add-sendmail").attr("disabled", null);
+                $("#cc-step2Btn").attr("disabled", null);
+            }
+        });
+
+        $("input[id^='cc-sendmail-input-']").focus(function() {
+            $(".cc-sendmail-error").remove();
+        });
+
+        $("input[id^='cc-reviewermail-input-']").blur(function() {
+            if (!mailcheck($(this).val())) {
+                $(this).parent().after('<div class="cc-reviewermail-error alert alert-danger alert-dismissible" style="margin-top: 7px;">メールアドレスが正しい書式で入力されていません。</div>');
+                $("#cc-add-reviewermail").attr("disabled", "disabled");
+                $("#cc-step2Btn").attr("disabled", "disabled");
+            } else {
+                $(".cc-reviewermail-error").remove();
+                $("#cc-add-reviewermail").attr("disabled", null);
+                $("#cc-step2Btn").attr("disabled", null);
+            }
+        });
+
+        $("input[id^='cc-reviewermail-input-']").focus(function() {
+            $(".cc-reviewermail-error").remove();
+        });
+
+        // -- Confirmation request message --//
+        $("#cc-request-message").attr('placeholder', '確認依頼メッセージを追加することができます（任意）' + '\n' + '※ 送付先全員のメールに記載されます。なお、確認者のメールには記載されません。');
+
+        // -- Draggable Code. -- //
+        $(function() {
+            function init_events(ele) {
+                ele.each(function() {
+                    // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                    // it doesn't need to have a start or end
+                    // use the element's text as the event title
+                    var eventObject = {
+                        title: $.trim($(this).text())
+                    };
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject);
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0 //  original position after the drag
+                    });
+                })
+            }
+            init_events($('#external-events div.external-event'));
+        });
+
+        // -- Document Type. -- //
+        $(function() {
+            $('input[name="ccdocsType"]:radio').change(function() {
+                if ($(this).val() > 0) {
+                    $('#cc-step3-docstype').text("複数者間契約");
+                } else {
+                    $('#cc-step3-docstype').text("二者間契約");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

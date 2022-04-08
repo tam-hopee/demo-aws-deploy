@@ -1,0 +1,211 @@
+body{
+    font-size: 14px;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+.mainTitle{
+    font-size: 20px;
+    font-weight: bold;
+}
+.mainTitle:before{
+    content:"";
+    display: inline-block;
+    width: 19px;
+    height: 15px;
+    background:url(img/home_icon.png)0 0 no-repeat;
+    margin: 0 7px 0 0;
+}
+.mainContent{
+    padding: 30px 90px 30px 30px;
+}
+.wrap{
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    -o-justify-content: space-between;
+    justify-content: space-between;
+    -ms-align-items: flex-start;
+    align-items: flex-start;
+    margin: 40px 0;
+}
+
+.note{
+    text-align: center;
+    font-size: 16px;
+    color:#333;
+    margin: 1em 0;
+}
+
+.step, .status{
+    width: 27%;
+    min-width:220px;
+    max-width:260px;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+}
+.stepInner{
+    text-align: center;
+    border-radius:10px;
+    padding: 35px 0;
+    box-shadow: 1px 1px 5px #7b7b7b;
+    cursor: pointer;
+}
+.i01{background:#dc1d31;}
+.i02{background:#b90114;}
+.i03{background:#8c1420;}
+
+.stepInner p{
+    margin: 0;
+    color:#fff;
+    font-size: 26px;
+    font-weight: normal;
+    letter-spacing: 2px;
+}
+.stepInner:hover p{
+    opacity: 0.60; /* opera  firefox safari */
+	filter: alpha(opacity=60); /* ie */
+	-ms-filter: "alpha( opacity=60 )";
+}
+.stepInner img{
+    display: block;
+    margin: 20px auto 0;
+}
+.arrow{
+    position:relative;
+    width: 23px;
+    height: 36px;
+    margin: 105px auto;
+}
+.arrow:before{
+    content:"";
+    display: block;
+    width: 23px;
+    height: 36px;
+    background:url(img/arrow.png)0 0 no-repeat;
+}
+
+.statusInner{
+    border: 3px solid #b90114;
+    background:#ffffff;
+    border-radius:10px;
+    padding: 27px 0;
+    box-shadow: 1px 1px 5px #7b7b7b;
+    cursor: pointer;
+}
+.statusInner:hover p{
+    opacity: 0.60; /* opera  firefox safari */
+	filter: alpha(opacity=60); /* ie */
+	-ms-filter: "alpha( opacity=60 )";
+}
+.statusInner p{
+    color:#b90114;
+    font-size: 24px;
+    letter-spacing: 2px;
+    margin: 0;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    -o-justify-content: center;
+    justify-content: center;
+    -ms-align-items: center;
+    align-items: center;
+}
+
+.statusInner p:before{
+    content:"";
+    display: inline-block;
+    width: 43px;
+    height: 39px;
+    margin: 0 10px 0 0;
+}
+.status:nth-child(1) .statusInner p:before{
+    background:url(img/status1.png)0 0 no-repeat;
+    background-size:contain;
+}
+.status:nth-child(2) .statusInner p:before{
+    background:url(img/status2.png)0 0 no-repeat;
+    background-size:contain;
+}
+.status:nth-child(3) .statusInner p:before{
+    background:url(img/status3.png)0 0 no-repeat;
+    background-size:contain;
+}
+
+@media screen and (max-width: 1000px) {
+    .mainContent{padding: 10px;}
+    .step, .status{
+        width: 29%;
+        min-width: auto;
+    }
+    .stepInner img{
+        width: 120px;
+    }
+    .stepInner p,
+    .statusInner p{font-size: 18px;}
+    .statusInner p:before{
+        width: 26px;
+        height: 23px;
+    }
+    .arrow{margin:85px auto;}
+}
+
+@media screen and (max-width: 599px) {
+    .wrap{
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        -webkit-justify-content: center;
+        -moz-justify-content: center;
+        -ms-justify-content: center;
+        -o-justify-content: center;
+        justify-content: center;
+    }
+    .step, .status{
+        width: 100%;
+        min-width: auto;
+        max-width: 100%;
+    }
+    .stepInner img{
+        width: 163px;
+    }
+    .stepInner p,
+    .statusInner p{font-size: 24px;}
+    .arrow{
+        margin: 0 auto 20px;
+        width: 36px;
+        height: 23px;
+    }
+    .arrow:before{
+        content: "";
+        display: block;
+        width: 36px;
+        height: 23px;
+        background:url(img/arrow_down.png)0 0 no-repeat;
+    }
+    .status{margin: 0 0 20px;}
+
+}
+
+@media screen and (min-width: 1300px) {
+    .mainContent{width: 1100px;}
+}
+
+.linkbox {
+    position: relative;
+}
+.linkbox a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height:100%;
+    width: 100%;
+}

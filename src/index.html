@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>＜要確認＞契約書一覧 | 電子契約サービス CloudContract（クラウドコントラクト）</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="plugins/tablesorter/tablesorter.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/receive.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<header id="header"></header>
+<div id="ccerror" style="display:none;">
+    <p>しばらく経っても画面が表示されない場合は、<a href="./index.html">こちら</a> をクリックしてください。</p>
+</div>
+<div class="main">
+    <aside id="sidebar"></aside>
+    <div class="mainContent">
+        <p class="receiveTitle pageTitle">受信</p>
+        <div id="confirm_content">
+            <div class="scroll">
+                <table class="tablesorter-default" id="cc-index-table">
+                    <thead>
+                    <tr>
+                        <th>契約書ファイル名</th>
+                        <th>依頼者</th>
+                        <th>有効期限</th>
+                        <th>メール受信日時</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="cc-docslist">
+                    </tbody>
+                </table>
+            </div>
+            <div class="loader-wrap">
+                <div class="loader overlay">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer id="footer"></footer>
+
+<!-- ./wrapper -->
+
+<!-- aws cognito sdk //-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+<script src="./v0/js/aws-cognito-sdk.min.js"></script>
+<script src="./v0/js/amazon-cognito-identity.min.js"></script>
+<!-- aws apigateway sdk //-->
+<script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+<script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+<!-- REQUIRED JS SCRIPTS -->
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="dist/js/app.min.js"></script>
+<script src="plugins/tablesorter/jquery.tablesorter.min.js"></script>
+<script src="plugins/tablesorter/customparser.js"></script>
+<!-- CContract App -->
+<script src="./v0/js/et-account.js"></script>
+<script src="./v0/js/cc-common.js"></script>
+<script src="./v0/js/cc-index.js"></script>
+</body>
+
+</html>

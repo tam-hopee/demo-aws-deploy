@@ -1,0 +1,228 @@
+body{
+    font-size: 14px;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    line-height: 1.42857143;
+    color: #565656;
+}
+
+.sendTitle{
+    font-size: 20px;
+    font-weight: bold;
+    color:#333;
+}
+
+.form_group01{
+    line-height: 1.6;
+}
+
+.sendTitle:before {
+    content: "";
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    background: url(img/icon_send_red.png)0 0 no-repeat;
+    background-size:18px;
+    margin: 0 7px 0 0;
+}
+.send_content h3{
+    color:#b90114;
+    margin:0;
+    margin-bottom: 12px;
+}
+
+.step_title{
+    font-weight: bold;
+    font-size: 16px;
+}
+hr{
+    background-color: transparent;
+    border:none;
+    border-top: 1px solid #a3a3a3;
+}
+.stepbox{padding: 0 0 80px;}
+
+.mainContent{
+    padding: 30px;
+    width: 100%;
+}
+
+/*.pull-right {*/
+/*    float: right !important;*/
+/*}*/
+
+/*@media (max-width: 767px) {*/
+/*    .hidden-xs {*/
+/*        display: none !important;*/
+/*    }*/
+/*}*/
+
+/*.media > .pull-right {*/
+/*    padding-left: 10px;*/
+/*}*/
+
+/* btn */
+.btn button{margin: 0;}
+
+.btn_base{
+    color:#fff;
+    padding: 8px 30px 8px 30px;
+    border:none;
+    border-radius:6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #7b7b7b;
+    background:#b90114;
+}
+.btn_gray{
+    color:#565656;
+    padding: 8px 30px 8px 30px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #7b7b7b;
+    background:#ededed;
+    width: 100%;
+    position:relative;
+    margin: 0 0 30px;
+}
+.btn_icon{padding: 8px 30px 8px 30px;}
+.btn_fa{width: 100%;position:relative;}
+
+
+.btn_base:hover{opacity: .8;}
+.btn_base:focus{outline: none;}
+.btn_base.disabled,
+.btn_base[disabled] {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: .65;
+}
+.w_auto{width: auto;}
+
+/* form */
+.send_content input{
+    padding: 10px 35px 10px 10px;
+    border:1px solid #565656;
+    border-radius:6px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.mail_box{
+    position: relative;
+    margin: 0 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius:6px;
+    border:2px solid #b5b5b5;
+    background:#f9f9f9;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    -ms-justify-content: flex-start;
+    -o-justify-content: flex-start;
+    justify-content: flex-start;
+    -ms-align-items: center;
+    align-items: center;
+}
+
+.mail_address{
+    width:calc(100% - 65px);
+    border-left: 1px solid #b5b5b5;
+}
+.mail_box i{
+    width: 65px;
+    text-align: center;
+    display: block;
+    padding: 10px 0;
+}
+input[name="cc_email"] {
+    padding: 10px;
+    border:none;
+    background:#f9f9f9;
+    width: 100%;
+}
+
+
+/* table */
+
+.send_content table{
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0 10px;
+}
+
+.send_content th{
+    background-color:#f9f9f9;
+    padding: 10px;
+    border:1px solid #b5b5b5;
+    text-align: left;
+}
+.send_content td{
+    padding: 10px;
+    border:1px solid #b5b5b5;
+    position: relative;
+    width: 70%;
+    vertical-align: middle;
+}
+.send_content td:nth-child(1){width: 30%;}
+
+@media screen and (max-width: 599px) {
+
+.sendTitle{margin:0;}
+.stepbox{padding: 40px 0;}
+.btn_fa i{
+    position:absolute;
+    left:35px;
+    top:50%;
+    transform:translateY(-50%);
+}
+.w_auto{width: 100%;}
+
+.scroll table{width:100%;}
+.scroll{
+    overflow: auto;
+    white-space: nowrap;
+}
+.scroll::-webkit-scrollbar{height: 5px;}
+.scroll::-webkit-scrollbar-track{background: #F1F1F1;}
+.scroll::-webkit-scrollbar-thumb {background: #BCBCBC;}
+
+.scroll table th{display: none;}
+
+}
+
+.radio_select label {
+    margin: 0px 20px;
+    margin-bottom: 20px;
+}
+
+.radio_select label input{
+    position: absolute;
+    margin-left: -20px;
+}
+
+/* confirmation request-message */
+.request-message {
+  margin-bottom: 20px;
+}
+.request-message textarea{
+    height: 69px;
+}
+
+.draggable-checkbox-placeholder {
+    font-size: 14px;
+    padding: 7px 0;
+    color: #999;
+    text-shadow: none;
+}
+.draggable-electric-stamp-placeholder {
+    font-size: 14px;
+    padding: 6px 0;
+    margin-left: 5px;
+    color: #999;
+    text-shadow: none;
+}

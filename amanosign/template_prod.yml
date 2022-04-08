@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: amano sign function for production
+Globals:
+  Function:
+    Timeout: 300
+    MemorySize: 1024
+Resources:
+  AmanoSign:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: prod-amano-sign
+      CodeUri: build/distributions/amanosign.zip
+      Handler: awslambda.amanosign.Handler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          TIMESTAMP_SERVER_ENDPOINT: http://tss3161.e-timing.ne.jp/astdtssvr/TSRequest
+          TIMESTAMP_SERVER_PASSWORD: ZAHM66
+          ATL_FILEPATH: atl/A2097100010000010001TL00.atl

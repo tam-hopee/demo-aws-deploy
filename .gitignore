@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+src/v0/js/et-account.js
+src/v0/apiGateway-js-sdk/apigClient.js
+storj/code
+storj/code/*
+storj/node_modules
+storj/node_modules/*
+headlesschrome/pdf-generate/keys/dev/*.pem
+headlesschrome/pdf-generate/keys/dev/*.crt
+headlesschrome/pdf-generate/keys/prod/*.pem
+headlesschrome/pdf-generate/keys/prod/*.crt
+amanosign/output_dev.yml
+amanosign/output_prod.yml
+amanosign/.gradle
+amanosign/build

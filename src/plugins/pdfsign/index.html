@@ -1,0 +1,122 @@
+<!--
+// PDFを電子署名するための中間インターフェース用 HTML。
+// ① lambda経由で HeadlessChrome上で読み込まれ、自動的にinputフォームがセットされる。（ pdf/generate:POST ）
+// ② 電子署名の施されたPDFファイルは、S3上にアップされる。（ pdf:POST ）
+// ③ blockchain_prepare にデータがセットされる。（  blockchain/prepare:POST ）
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PDFSign</title>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <!-- inject:js -->
+    <script src="../jQuery/jquery-2.2.3.min.js"></script>
+    <script src="lib/forge-patched.js"></script>
+    <script src="lib/pdfjs.parser.js"></script>
+    <script src="pdfsign.js"></script>
+    <!-- aws cognito sdk //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <script src="../../v0/js/aws-cognito-sdk.min.js"></script>
+    <script src="../../v0/js/amazon-cognito-identity.min.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script src="../../v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script src="../../v0/apiGateway-js-sdk/apigClient.js"></script>
+    <script src="../../v0/js/cc-common.js"></script>
+    <!-- endinject -->
+
+</head>
+
+<body>
+    <h2>PDFSign</h2>
+    <table style="text-align:left;">
+        <tr>
+            <th>p12 Certificate</th>
+            <th>p12 Password</th>
+            <th>Reason</th>
+            <th>PDF file</th>
+            <th>Bucket</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td><input type="file" id="cert" name="cert[]" multiple /></td>
+            <td><input type="password" id="pass" name="pass" /></td>
+            <td><input type="text" id="reason" name="reason" /></td>
+            <td><input type="file" id="pdf" name="pdf[]" multiple /></td>
+            <td><input type="text" id="bucket" name="bucket" /></td>
+            <td>
+                <p id="result"></p>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        var certInput = new Uint8Array();
+
+        function handleFileSelect1(evt) {
+            var file = evt.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                certInput = event.target.result;
+            }
+            reader.readAsArrayBuffer(file);
+            $('#cert').attr("file-name", file.name);
+        }
+        document.getElementById('cert').addEventListener('change', handleFileSelect1, false);
+
+        function handleFileSelect2(evt) {
+            var file = evt.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var _key = (getGetParams().key) ? getGetParams().key : "";
+                var _bucket = document.getElementById('bucket').value;
+                var data = event.target.result;
+                pdfSigned = PDFSIGN.signpdf(data, certInput, document.getElementById('pass').value, document.getElementById('reason').value);
+                var _data = "data:application/pdf;base64," + btoa(Array.from(pdfSigned, e => String.fromCharCode(e)).join(""));
+                if (_bucket !== "" && _key !== "") {
+                    apigClientFactory.newClient().pdfPost({}, {
+                        "data": _data,
+                        "filename": file.name,
+                        "bucket": _bucket
+                    }).then(function(result) {
+                        var res = JSON.parse(result.data.body);
+                        console.log(res);
+                        $("#result").text("Upload is done.");
+                        updateBlockChainPrepare(_key, _bucket, file.name);
+                    }).catch(function(result) {
+                        var res = JSON.parse(result.data.body);
+                        console.log(res);
+                        $("#result").text("Upload is failed.");
+                    });
+                }
+            }
+            reader.readAsArrayBuffer(file);
+            $('#pdf').attr("file-name", file.name);
+        }
+        document.getElementById('pdf').addEventListener('change', handleFileSelect2, false);
+
+        function updateBlockChainPrepare(key, bucket, file) {
+            apigClientFactory.newClient().blockchainPreparePost({}, {
+                "key": key,
+                "bucket": bucket,
+                "file": file
+            }).then(function(result) {
+                var res = JSON.parse(result.data.body);
+            }).catch(function(result) {
+                var res = JSON.parse(result.data.body);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Cognito Javascript Sample</title>
+    <!-- aws sdk //-->
+    <!-- Read: https://github.com/aws/amazon-cognito-identity-js -->
+    <!-- Read: http://docs.aws.amazon.com/ja_jp/cognito/latest/developerguide/using-amazon-cognito-user-identity-pools-javascript-examples.html -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <!-- aws cognito sdk //-->
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <script src="js/et-account.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script type="text/javascript" src="apiGateway-js-sdk/apigClient.js"></script>
+    <!-- jquery //-->
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+    <!-- bootstrap3 //-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cognito Javascript Sample</h1>
+        <hr/>
+        <form class="form-signin">
+            <!-- For SignUP -->
+            <h2>Sign Up</h2>
+            <div id="message_signup" class="alert" style="display:none;"></div>
+            <label for="inputSignupUsername" class="sr-only"></label>
+            <input type="text" id="inputSignupUsername" class="form-control" placeholder="Email" required autofocus></input>
+            <label for="inputSignupPassword" class="sr-only"></label>
+            <input type="password" id="inputSignupPassword" class="form-control" placeholder="Password" required></input>
+            <br/>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="signup_btn" value="Create Account"></input>
+            <br/><br/>
+            <hr/>
+            <!-- For Activate -->
+            <h2>Activate</h2>
+            <div id="message_activate" class="alert" style="display:none;"></div>
+            <label for="inputVerifycode" class="sr-only"></label>
+            <input type="text" id="inputVerifycode" class="form-control" placeholder="Verify Code"></input>
+            <br/>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="activate_btn" value="Activate Your Account"></input>
+            <br/><br/>
+            <hr/>
+            <!-- For Resend ActivateCode -->
+            <div id="resendactivatecode">
+                <h2>Resend ActivateCode</h2>
+                <div id="message_resendactivatecode" class="alert" style="display:none;"></div>
+                <input type="text" id="inputResendUsername" class="form-control" placeholder="Email" required autofocus></input>
+                <br/>
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="resendactivatecode_btn" value="Resend"></input>
+            </div>
+            <br/>
+            <hr/>
+            <!-- For SignIn -->
+            <div id="signin" style="display: none;">
+                <h2>Sign In</h2>
+                <div id="message_signin" class="alert" style="display:none;"></div>
+                <label for="inputSigninUsername" class="sr-only"></label>
+                <input type="text" id="inputSigninUsername" class="form-control" placeholder="Email" required autofocus></input>
+                <label for="inputSigninPassword" class="sr-only"></label>
+                <input type="password" id="inputSigninPassword" class="form-control" placeholder="Password" required></input>
+                <br/>
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="signin_btn" value="Sign in"></input>
+            </div>
+            <!-- For SignOut -->
+            <div id="signout" style="display: none;">
+                <h2>Sign Out</h2>
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="signout_btn" value="Sign out"></input>
+            </div>
+            <br/><br/>
+            <hr/>
+            <!-- For ForgotPassword -->
+            <div id="forgotpassword">
+                <h2>Forgot Password</h2>
+                <div id="forgotpassword_send" style="display:block;">
+                    <div id="message_forgotpassword" class="alert" style="display:none;"></div>
+                    <input type="text" id="inputFogotUsername" class="form-control" placeholder="Email" required autofocus></input>
+                    <br/>
+                    <input type="button" class="btn btn-lg btn-primary btn-bloc" id="forgotpassword_btn" value="Forgot Password"></input>
+                    <br/><br/>
+                </div>
+                <div id="forgotpassword_submit" style="display:none;">
+                    <h3>Please input verification code and New Password.</h3>
+                    <div id="message_forgotpassword_submit" class="alert" style="display:none;"></div>
+                    <input type="text" id="forgotpassword_code" class="form-control" placeholder="Verify Code" required autofocus></input>
+                    <input type="password" id="forgotpassword_pass" class="form-control" placeholder="New Password" required></input>
+                    <br/>
+                    <input type="button" class="btn btn-lg btn-primary btn-bloc" id="forgotpassword_submit_btn" value="Submit"></input>
+                </div>
+            </div>
+            <br/><br/>
+            <!-- For API -->
+            <hr/>
+            <h1>API Gate Way with Lambda Function (+ DynamoDB)</h1>
+            <hr/>
+            <div id="userGet">
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="userGet_btn" value="userGet"></input>
+                <br/><br/>
+                <div id="message_userGet" class="alert" style="display:none;"></div>
+            </div>
+            <br/><br/>
+            <div id="userPost">
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="userPost_btn" value="userPost"></input>
+                <br/><br/>
+                <div id="message_userPost" class="alert" style="display:none;"></div>
+            </div>
+            <br/><br/>
+            <div id="docsPost">
+                <input type="button" class="btn btn-lg btn-primary btn-bloc" id="docsPost_btn" value="docsPost"></input>
+                <input type="file" id="cc-fileInput" style="display: none;" />
+                <br/><br/>
+                <div id="message_docsPost" class="alert" style="display:none;"></div>
+                <div id="message_docsPost_link"></div>
+            </div>
+            <br/><br/>
+        </form>
+    </div>
+    <script>
+        var account, apigClient;
+        var attributeList = [];
+        var user = null;
+        window.onload = async() => {
+            account = new Account();
+            var token = await account.getToken();
+            var authInfo = await account.getAuthInfo()
+            if (token === null) {
+                document.querySelector('#signin').style.display = 'block';
+            } else {
+                document.querySelector('#signout').style.display = 'block';
+                apigClient = apigClientFactory.newClient({
+                    accessKey: authInfo.accessKeyId,
+                    secretKey: authInfo.secretAccessKey,
+                    sessionToken: authInfo.sessionToken,
+                    apiKey: authInfo.apikey,
+                    region: authInfo.region
+                });
+            }
+        }
+
+        // SignUp
+        $('#signup_btn').click(function() {
+            username = $("#inputSignupUsername").val();
+            password = $("#inputSignupPassword").val();
+            if (!username || !password) {
+                return false;
+            }
+            account.signUp(username, password, attributeList).then((result) => {
+                user = result.user;
+                message = result.user.getUsername() + ' is created.'
+                account.showMessage(message, "alert-success", "#message_signup")
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_signup")
+            })
+        });
+
+        // Activate
+        $('#activate_btn').click(function() {
+            verifycode = $("#inputVerifycode").val();
+            if (!verifycode) {
+                return false;
+            }
+            account.activate(user, verifycode).then((result) => {
+                account.showMessage(result, "alert-success", "#message_activate")
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_activate")
+            })
+        });
+
+        // SignIn
+        $('#signin_btn').click(function() {
+            username = $("#inputSigninUsername").val();
+            password = $("#inputSigninPassword").val();
+            if (!username || !password) {
+                return false;
+            }
+            account.signIn(username, password).then(() => {
+                location.reload();
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_signin")
+            })
+        })
+
+        // SignOut
+        $('#signout_btn').click(function() {
+            account.signOut();
+            location.reload();
+        })
+
+        // Forgot password.
+        $('#forgotpassword_btn').click(function() {
+            username = $("#inputFogotUsername").val();
+            account.forgotPassword(username, "#forgotpassword_submit", "#forgotpassword_send").then((result) => {
+                account.showMessage(result, "alert-success", "#message_forgotpassword")
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_forgotpassword")
+            });
+        })
+
+        $('#forgotpassword_submit_btn').click(function() {
+            var verificationCode = $('#forgotpassword_code').val()
+            var newPassword = $('#forgotpassword_pass').val()
+            account.confirmPassword(verificationCode, newPassword).then((result) => {
+                account.showMessage("Success", "alert-success", "#message_forgotpassword_submit")
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_forgotpassword_submit")
+            });
+        })
+
+        // Resend Activate Code.
+        $('#resendactivatecode_btn').click(function() {
+            var username = $('#inputResendUsername').val()
+            account.resendActivateCode(username).then((result) => {
+                account.showMessage("Success", "alert-success", "#message_resendactivatecode")
+            }).catch((err) => {
+                account.showMessage(err, "alert-danger", "#message_resendactivatecode")
+            });
+        })
+
+        // API Gate Way
+        // userGet
+        $('#userGet_btn').click(function() {
+            var params = {};
+            var body = {};
+            apigClient.userGet(params, body)
+                .then(function(result) {
+                    console.log(result);
+                    account.showMessage(JSON.stringify(result.data.Items), "alert-info", "#message_userGet", 0)
+                }).catch(function(result) {
+                    console.log(result);
+                    account.showMessage(JSON.stringify(result), "alert-danger", "#message_userGet", 0)
+                });
+        });
+
+        // userPost
+        $('#userPost_btn').click(function() {
+            var params = {};
+            var body = {
+                email: account.cognitoUser.username
+            };
+            apigClient.userPost(params, body)
+                .then(function(result) {
+                    console.log(result);
+                    account.showMessage(JSON.stringify(result), "alert-info", "#message_userPost", 0)
+                }).catch(function(result) {
+                    console.log(result);
+                    account.showMessage(JSON.stringify(result), "alert-danger", "#message_userPost", 0)
+                });
+        });
+
+        // File Upload
+        var uploadButton = document.getElementById('docsPost_btn');
+        uploadButton.addEventListener('click', function(e) {
+            $("#cc-fileInput").click()
+        })
+        document.getElementById("cc-fileInput").addEventListener("change", function(e) {
+            try {
+                var fileList = this.files;
+                console.log(fileList);
+                uploadFile(fileList);
+            } catch (msg) {
+                console.log("Error");
+            }
+        })
+
+        // docsPost
+        function uploadFile(fileData) {
+            for (var i = 0; i < fileData.length; i++) {
+                var file = fileData[i];
+                if (!file.type.match(/pdf$/)) {
+                    account.showMessage("Please select pdf file.", "alert-danger", "#message_docsPost", 0)
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onerror = function() {
+                    account.showMessage("Error.", "alert-danger", "#message_docsPost", 0)
+                }
+                reader.onload = function(ev) {
+                    var params = {};
+                    var body = {
+                        data: ev.target.result,
+                        filename: file.name
+                    };
+                    // post pdf file to S3 bucket
+                    apigClient.documentPost(params, body)
+                        .then(function(result) {
+                            console.log(result);
+                            var url = JSON.parse(result.data.body).Location
+                            var key = JSON.parse(result.data.body).key
+                            var bucket = JSON.parse(result.data.body).Bucket
+                            account.showMessage("Uplaod File is [ " + key + " ]", "alert-info", "#message_docsPost", 0)
+                            var params = {};
+                            // get signed URL (you can set expire time.)
+                            var expiretime = 60
+                            apigClient.documentUrlPost(params, {
+                                    bucket: bucket,
+                                    filename: key,
+                                    time: expiretime
+                                })
+                                .then(function(result) {
+                                    console.log(result);
+                                    var url = JSON.parse(result.data.body)
+                                    $("#message_docsPost_link").append('<object data="' + url + '" width="100%" height="700"></object>')
+                                }).catch(function(result) {
+                                    console.log(result);
+                                });
+                        }).catch(function(result) {
+                            console.log(result);
+                            account.showMessage(JSON.stringify(result), "alert-danger", "#message_docsPost", 0)
+                        });
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <!-- <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="dist/css/paper.css">
+    <link rel="stylesheet" href="plugins/pdf/text_layer_builder.css" rel="stylesheet">
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/notosansjapanese.css);
+        body {
+            font-family: 'Noto Sans Japanese', sans-serif;
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body class="">
+    <div id="main">
+        <div id="cc-container" class="table-responsive"></div>
+        <div id="cc-container-dummy" style="display:none;"></div>
+        <div class="overlay" style="display: block; margin: 10px;">
+            <i class="fa fa-refresh fa-spin"></i>&nbsp;&nbsp;<span>読み込み中です。</span>
+        </div>
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- aws cognito sdk //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.45.0.min.js"></script>
+    <script src="./v0/js/aws-cognito-sdk.min.js"></script>
+    <script src="./v0/js/amazon-cognito-identity.min.js"></script>
+    <!-- aws apigateway sdk //-->
+    <script src="./v0/apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+    <script src="./v0/apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+    <script src="./v0/apiGateway-js-sdk/apigClient.js"></script>
+    <!-- REQUIRED JS SCRIPTS -->
+    <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="dist/js/app.min.js"></script>
+    <script src="plugins/pdf/pdf.js"></script>
+    <script src="plugins/pdf/text_layer_builder.js"></script>
+    <script src="plugins/cryptoJS/aes.js"></script>
+    <!-- CContract App -->
+    <script src="./v0/js/et-account.js"></script>
+    <script src="./v0/js/cc-common.js"></script>
+    <script src="./v0/js/cc-pdfview.js"></script>
+    <script src="./v0/js/cc-pdf.js"></script>
+</body>
+
+</html>
