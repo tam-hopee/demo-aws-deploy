@@ -149,7 +149,7 @@ _getpdfpage = (pdf, pageNumber, maxNumber) => {
             box.each(function() {
                 if ($(this).parent()[0].id == divid) {
                     // ページ毎に処理する。
-                    $(this).css("cursor", "none").css("box-shadow", "0 0px 0px #ffffff").css("display", "block");
+                    $(this).css("cursor", "none").css("box-shadow", "0 0px 0px #ffffff").css("display", "block").css("visibility", "visible");
                     $("#cc-container").find("#" + divid).append(this);
                 }
             })

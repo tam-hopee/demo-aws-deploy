@@ -75,12 +75,12 @@
                                 </div>
                             </div>
                             <div id="cc-decision-box" class="margin" style="text-align: center;">
-                                <p id="cc-disc-signature" style="display:none;">＊残り<span></span>箇所の署名欄記入後に同意してください。</p>
+                                <p id="cc-disc-signature" style="display:none;">＊残り<span></span>箇所の<span id="object"></span>欄記入後に同意してください。</p>
                                 <button type="button" id="cc-document-concluded" class="btn btn-primary" onclick="postDocumentProcessed('concluded');" style="display:none;"><i class="fa fa-fw fa-check-circle-o"></i> 書類の内容に同意する</button>
                                 <button type="button" id="cc-document-dismissal" class="btn btn-default" onclick="postDocumentProcessed('dismissal');" style="display:none;"><i class="fa fa-fw fa-close"></i> 同意せずに却下する</button>
                             </div>
                             <div id="cc-review-box" class="margin" style="text-align: center; display: none;">
-                                <div class="margin"><textarea id="cc-document-review-comment" class="form-control" rows="3" placeholder="コメントを追記する（任意）"></textarea></div>
+                                <div class="margin"><textarea id="cc-document-review-comment" class="form-control" rows="4"></textarea></div>
                                 <button type="button" id="cc-document-review-approval" class="btn btn-primary" onclick=""><i class="fa fa-fw fa-check-circle-o"></i> 書類の内容に同意する</button>
                                 <button type="button" id="cc-document-review-reject" class="btn btn-default" onclick=""><i class="fa fa-fw fa-close"></i> 同意せずに却下する</button>
                             </div>
@@ -126,7 +126,7 @@
                                 ※半角・全角スペースを入力した場合はテキストが改行されます。
                             </h5>
                             <div class="form-group has-feedback">
-                                <input id="cc-inputElectronicStamp" type="text" class="form-control" placeholder="株式会社クラウドコントラスト">
+                                <input id="cc-inputElectronicStamp" type="text" class="form-control" placeholder="クラウドコントラクト株式会社">
                                 <div  id="cc-inputElectronicStampError" style="color: #d54f64; display: none">
                                     文字列の長さを150以下にしてください。
                                 </div>

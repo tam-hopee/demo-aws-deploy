@@ -200,8 +200,8 @@ function sendMail() {
         $("#cc-sendmailBtn").prop("disabled", true);
         $("#cc-loading-step3").attr("style", "display: block;");
         var count = checkSignatureCount($("#cc-container"));
-        var requestMessage = $("#cc-request-message").val()
-        upload.setRequestMessage(requestMessage)
+        var requestMessage = $("#cc-request-message").val();
+        upload.setRequestMessage(requestMessage);
         $(document.getElementById('cc-container')).find('.textLayer').remove(); // renderpdfの容量問題暫定対応（不要要素を削除）
         $("#cc-container").find('input[type="checkbox"]:checked').attr('checked', true).attr('disabled', true); // disable checked checkboxes
         $("#cc-container").find('button.electronic-stamp-button').each(function (){
@@ -397,7 +397,7 @@ class Upload {
     }
 
     setRequestMessage(requestMessage) {
-        this.requestMessage = requestMessage
+        this.requestMessage = requestMessage;
     }
 }
 
@@ -549,6 +549,9 @@ $(function() {
         if (text != '') {
             $button.append($img);
             $img.css('max-width', '100%');
+            window.switchBorderBox($button.parents('.ui-draggable'), 'remove');
+        } else {
+            window.switchBorderBox($button.parents('.ui-draggable'));
         }
         $button.css('border-color', text == '' ? '#c3cfd9' : 'red');
     }

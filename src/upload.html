@@ -169,7 +169,7 @@
                         <div class="loader overlay">Loading...</div>
                     </div>
                     <div class="request-message">
-                        <textarea id="cc-request-message" class="form-control" row="4" ></textarea>
+                        <textarea id="cc-request-message" class="form-control" row="3" ></textarea>
                     </div>
                     <p>修正したい場合は、各Stepに戻って修正をしてください。</p>
                     <button id="confirmBtn" class="confirmBtn btn_base btn_fa" onclick="confirmStep3();"><i class="fa fa-fw fa-send-o"></i>上記の内容で確定する</button>
@@ -207,7 +207,7 @@
                                 ※半角・全角スペースを入力した場合はテキストが改行されます。
                             </h5>
                             <div class="form-group has-feedback">
-                                <input id="cc-inputElectronicStamp" type="text" class="form-control" placeholder="株式会社クラウドコントラスト">
+                                <input id="cc-inputElectronicStamp" type="text" class="form-control" placeholder="クラウドコントラクト株式会社">
                                 <div  id="cc-inputElectronicStampError" style="color: #d54f64; display: none">
                                     文字列の長さを150以下にしてください。
                                 </div>
@@ -346,7 +346,11 @@
         });
 
         // -- Confirmation request message --//
-        $("#cc-request-message").attr('placeholder', '確認依頼メッセージを追加することができます（任意）' + '\n' + '※ 送付先全員のメールに記載されます。なお、確認者のメールには記載されません。');
+        $("#cc-request-message").attr('placeholder', 
+            'お相手へメッセージを送ることができます。（任意）' +
+            '\n' + '送信先・社内稟議先の全員にメッセージが表示されます。' +
+            '\n' + '※締結済みの契約書内にメッセージは残りません。'
+        );
 
         // -- Draggable Code. -- //
         $(function() {
