@@ -43,15 +43,23 @@ function renderPage(num) {
             // ダミー要素から署名要素を抽出し、レンダリングされた要素に貼り付ける。
             var signatureCount = $("#cc-signatureCount").val();
             signatureCount = (signatureCount === "undefined") ? 0 : signatureCount;
-            if (signatureCount != _checkSignedCount($("#cc-container"))) signature = true;
-            var box = $("#cc-container-dummy").find(".ui-draggable");
-            box.each(function() {
-                if ($(this).parent()[0].id == pagename) {
-                    // ページ毎に処理する。
-                    $(this).css("cursor", "none").css("box-shadow", "0 0px 0px #ffffff");
-                    $("#cc-container").find("canvas").before(this);
+            // add count stamp
+            signatureCount = signatureCount !== 'multiple' ? _getSignedCount($("#cc-container-dummy")) : signatureCount;
+
+            if (signatureCount != _checkSignedCount($("#cc-container-dummy"))) signature = true;
+            // 署名エリアのレンダリング
+            if (pageNum === 1 && $("#cc-container ui-draggable").length === 0) {
+                var pageCount = document.getElementById('page_count').textContent;
+                pageCount = pageCount ? Number(pageCount) : 0;
+                for (var pageLoop = 1; pageLoop <= pageCount; pageLoop++) {
+                    var addPageName = "cc-page-" + pageLoop;
+                    var addPage = $("#cc-container").find("#"+addPageName);
+                    if (addPage.length === 0) {
+                        $("#cc-container").append($("<div id="+ addPageName +"></div>"));
+                    }
+                    _moveBoxSignature(addPageName);
                 }
-            })
+            }
 
             // 署名済みテキストの処理（改行判定）
             var p = $("#" + pagename + "> div > p");
@@ -64,26 +72,31 @@ function renderPage(num) {
             textarea.each(function() {
                 // 署名欄記入後の動作
                 $(this).blur(function() {
-                    _checkValue($(this));
+                    _checkValue($(this), $(this).parents('.ui-draggable'));
                     _checkDisableConcludedButton();
                 })
+            })
+            // add change for checkbox
+            var checkboxes = $("#" + pagename + " input[type=checkbox]");
+            checkboxes.each(function() {
+                $(this).change(function() {
+                    if(this.checked) {
+                        _switchBorderBox($(this).parents('.ui-draggable'), 'remove')
+                    } else {
+                        _switchBorderBox($(this).parents('.ui-draggable'))
+                    }
+                });
             })
         }
         if (signature && signatureCount !== "multiple") {
             // 署名付きかつ複数者間契約でなければ、署名数をチェック
             _concludedButton(signatureCount - _checkSignedCount($("#cc-container")));
-        } else {
-            // 複数者間契約でなければ、末押印をチェック
-            var electronicStampCount = _checkBlankElectronicStampCount($("#cc-container"));
-            if (electronicStampCount > 0 && signatureCount !== "multiple") {
-                _concludedButton(electronicStampCount);
-            }
         }
 
         // -- Display droppedBox. -- //
         $("[id=droppedBox]").each(function() {
-            if (pagename == $(this).context.parentElement.id) $(this).css("display", "block");
-            else $(this).css("display", "none");
+            if (pagename == $(this).context.parentElement.id) $(this).css("display", "block").css("visibility", '');
+            else $(this).css("visibility", "hidden");
         })
 
         // -- Droppable Code. -- //
@@ -105,7 +118,10 @@ function renderPage(num) {
                         drag_elm.css("top", ui.offset.top - $(this).offset().top)
                             .css("left", ui.offset.left - $(this).offset().left)
                             .css("position", "absolute")
+                            .css("box-sizing", "content-box")
                             .attr("id", pattern);
+                        // add border when drop
+                        _switchBorderBox(drag_elm)
                         $(this).parent().prepend(drag_elm);
                         drag_elm.draggable({
                             zIndex: 1070
@@ -117,8 +133,17 @@ function renderPage(num) {
                         }
                         var $checkbox = drag_elm.find("input[type='checkbox']");
                         if ($checkbox.length > 0) {
-                            drag_elm.css("width", "35px");
                             $checkbox.attr('disabled', false);
+                            $checkbox.css('margin-right', 0);
+                            $checkbox.css('width', "18px");
+                            $checkbox.css('height', "22px");
+                            $checkbox.change(function() {
+                                if(this.checked) {
+                                    _switchBorderBox(drag_elm, 'remove')
+                                } else {
+                                    _switchBorderBox(drag_elm)
+                                }
+                            });
                             return // stop bind event to checkbox container
                         }
 
@@ -141,7 +166,7 @@ function renderPage(num) {
 
                         var elm = $(drag_elm.children());
                         $(elm).blur(function() {
-                            _checkValue(elm);
+                            _checkValue(elm, drag_elm);
                         });
                         // textarea resize event.
                         $(elm).exResize(function() {
@@ -194,31 +219,48 @@ function renderPage(num) {
     document.getElementById('page_num').textContent = pageNum;
 }
 
-function _checkValue(element) {
-    if (element.val().match(/\S/g)) element.attr("value", element.val());
-    else element.attr("value", "");
+function _checkValue(element, box) {
+    if (element.val().match(/\S/g)) {
+        element.attr("value", element.val());
+        // remove border box color 
+        _switchBorderBox(box, 'remove')
+    } else {
+        element.attr("value", "");
+        // add border box color 
+        _switchBorderBox(box)
+    }
+}
+
+function _getSignedCount(element) {
+    return _getTextCount(element) + _getStampCount(element);
+}
+
+function _getTextCount(element) {
+    return element.find("textarea").length;
+}
+
+function _getStampCount(element) {
+    return element.find("button.electronic-stamp-button").length;
 }
 
 function _checkSignedCount(element) {
-    var _signatureCount = 0;
-    element.find("textarea").each(function() {
-        if ($(this).val().match(/\S/g)) _signatureCount++;
-    })
-    return _signatureCount;
+    return _checkTextCount(element) + _checkStampCount(element);
 }
 
-/**
- * _checkBlankElectronicStampCount
- * @param element
- * @returns {number}
- * @private
- */
-function _checkBlankElectronicStampCount(element) {
-    var _electronicStampCount = 0;
+function _checkTextCount(element) {
+    var textCount = 0;
+    element.find("textarea").each(function() {
+        if ($(this).val().match(/\S/g)) textCount++;
+    }) 
+    return textCount
+}
+
+function _checkStampCount(element) {
+    var stampCount = 0;
     element.find("button.electronic-stamp-button").each(function() {
-        ($(this).find('>img').length < 1) && _electronicStampCount++;
+        if ($(this).find('>img').length > 0) stampCount++;
     })
-    return _electronicStampCount;
+    return stampCount
 }
 
 /**
@@ -228,21 +270,29 @@ function _checkBlankElectronicStampCount(element) {
  */
 function _checkDisableConcludedButton() {
     var signatureCount = $("#cc-signatureCount").val();
-    signatureCount = (signatureCount === "undefined") ? 0 : signatureCount;
-    var blankElectronicStampCount = _checkBlankElectronicStampCount($("#cc-container"));
-    var checkSignedCountValue = _checkSignedCount($("#cc-container"));
-    if ((signatureCount == checkSignedCountValue && blankElectronicStampCount == 0) || signatureCount === "multiple") {
-        // 署名が終わった、もしくは複数者契約であれば締結ボタンを活性化させる。
-        $("#cc-disc-signature").attr("style", "display:none;");
-        $("#cc-document-concluded").prop('disabled', false);
-    } else {
-        signatureCount - checkSignedCountValue > 0 ? _concludedButton(signatureCount - checkSignedCountValue) : _concludedButton(blankElectronicStampCount)
+    signatureCount = signatureCount !== 'multiple' ? _getSignedCount($("#cc-container")) : signatureCount;
+
+    if (signatureCount !== "multiple") {
+        // 署名付きかつ複数者間契約でなければ、署名数をチェック
+        _concludedButton(signatureCount - _checkSignedCount($("#cc-container")));
     }
 }
 window.checkDisableConcludedButton = _checkDisableConcludedButton;
 
 function _concludedButton(count) {
+    var objectText = "署名及び押印";
+    if (_getStampCount($("#cc-container")) - _checkStampCount($("#cc-container")) === 0) {
+        objectText = "署名"
+    } else if (_getTextCount($("#cc-container")) - _checkTextCount($("#cc-container")) === 0) {
+        objectText = "押印"
+    }
     $("#cc-disc-signature > span").text(count);
+    $("#cc-disc-signature > #object").text(objectText);
+    if (count === 0) {
+        $("#cc-disc-signature").attr("style", "display:none;");
+        $("#cc-document-concluded").prop('disabled', false);
+        return
+    }
     $("#cc-disc-signature").attr("style", "display:block;");
     $("#cc-document-concluded").prop('disabled', true);
 }
@@ -282,3 +332,24 @@ function onNextPage() {
     queueRenderPage(pageNum);
 }
 document.getElementById('next').addEventListener('click', onNextPage);
+
+window.switchBorderBox = _switchBorderBox;
+function _switchBorderBox(elm, mode) {
+    if (mode === 'remove') {
+        elm.css("border", '')
+    } else {
+        elm.css("border", "1px solid #f4d366");
+        elm.css("border-radius", "4px");
+    }
+}
+
+function _moveBoxSignature(pagename) {
+    var box = $("#cc-container-dummy").find(".ui-draggable");
+    box.each(function() {
+        if ($(this).parent()[0].id == pagename) {
+            // ページ毎に処理する。
+            $(this).css("cursor", "none").css("box-shadow", "0 0px 0px #ffffff");
+            $("#cc-container").find("#"+pagename).append(this);
+        }
+    })
+}

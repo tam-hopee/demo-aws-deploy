@@ -69,6 +69,14 @@ window.onload = async() => {
         }
     }
 
+    // -- document-review-comment placeholder --//
+    $("#cc-document-review-comment").attr('placeholder', 
+        '他の社内稟議担当者へメッセージを送ることができます。（任意）' +
+        '\n' + '※メッセージが表示されるのは、社内稟議担当者のみです。' +
+        '\n' + '※確認依頼メール内には記載されません。' +
+        '\n' + '※締結済みの契約書内にメッセージは残りません。'
+    );
+
     // Electronic stamp
     $(function() {
         $("#cc-container").on('click', 'button.electronic-stamp-button', function (e) {
@@ -131,6 +139,9 @@ window.onload = async() => {
             if (text != '') {
                 $button.append($img);
                 $img.css('max-width', '100%');
+                window.switchBorderBox($button.parents('.ui-draggable'), 'remove');
+            } else {
+                window.switchBorderBox($button.parents('.ui-draggable'));
             }
             $button.css('border-color', text == '' ? '#c3cfd9' : 'red');
             window.checkDisableConcludedButton();
@@ -225,16 +236,19 @@ postDocumentReviewer = (status) => {
 }
 
 postDocumentProcessed = (status) => {
-    checkSignature($("#cc-container"));
+    var signatureCount = $("#cc-signatureCount").val();
+    if (signatureCount !== 'multiple') {
+        checkSignature($("#cc-container"));
+    }
     $(document.getElementById('cc-container')).find('.textLayer').remove(); // renderpdfの容量問題暫定対応（不要要素を削除）
-    $("#cc-container").find('input[type="checkbox"]:checked').attr('checked', true)
-    $("#cc-container").find('input[type="checkbox"]').attr('disabled', true); // disable checkboxes
+    $("#cc-container").find('input[type="checkbox"]:checked').attr('checked', true);
+    $("#cc-container").find('input[type="checkbox"]:checked').attr('disabled', true);
     $("#cc-container").find('button.electronic-stamp-button').each(function () {
-        if ($(this).find('>img').length < 1) {
-            $(this).attr('disabled', true).text('押印').css('background', '#DFE6ED').css('color','#a1afbc').css('font-size', '25px');
+        if ($(this).find('>img').length > 0) {
+            $(this).attr('disabled', true);
         }
     });
-    $("#cc-container").find('button.electronic-stamp-button').prop('disabled', true);
+    $("#cc-container").find(".ui-draggable").css("visibility", '');
     var renderpdf = document.getElementById('cc-container').innerHTML;
     if (status !== "concluded" && status !== "dismissal") erralert("");
     else {
@@ -343,7 +357,7 @@ setDocsInfo = (data) => {
             $("#cc-container input[type='checkbox']").attr('disabled', true);
             $("#cc-container").find('button.electronic-stamp-button').each(function (){
                 if ($(this).find('>img').length < 1) {
-                    $(this).attr('disabled', true).text('押印').css('background', '#DFE6ED').css('color','#a1afbc').css('font-size', '25px');
+                    $(this).attr('disabled', true).text('押印').css('background', '#DFE6ED').css('color','#a1afbc').css('font-size', '14px');
                 }
             });
         }, 1000);
@@ -354,11 +368,10 @@ setDocsInfo = (data) => {
     // show 確認依頼メッセージ
     if ((data.status === "review" || data.status === "sent" ) && data.requestMessage) {
         $("#cc-request-message").text(data.requestMessage)
-        $("#cc-request-message-box").show()
+        $("#cc-request-message-box").show();
     } else {
-        $("#cc-request-message-box").hide()
+        $("#cc-request-message-box").hide();
     }
-    setProcessedInfo(data);
     var params = {};
     apigClientFactory.newClient().documentUrlPost(params, {
         bucket: data.bucket,
@@ -375,10 +388,17 @@ setDocsInfo = (data) => {
         $("#cc-pager").attr("style", "display:block;");
         $("#cc-container").attr("style", "display:block;");
         $("#cc-container-dummy").html(data.renderpdf);
+       
+        // fix: if textarea has value show this
+        $("#cc-container-dummy textarea").each((i, textarea) => {
+            $(textarea).val($(textarea).attr('value'));
+        })
+
         // 複数者間契約であれば署名欄制御はしない
         var signatureCount = data.signatureCount;
         if (ismultiple) signatureCount = "multiple";
         $("#cc-container-dummy").append("<input id='cc-signatureCount' type='hidden' value='" + signatureCount + "'></input>");
+        setProcessedInfo(data);
     }).catch(function(result) {
         erralert(JSON.stringify(result));
     });
@@ -443,12 +463,23 @@ setProcessedInfo = (data) => {
     var count_concluded = 0;
     if (data.processed_receivers) {
         // 複数者間契約対応
-        if (data.isme) $("#cc-decision-box").remove();
+        if (data.isme) 
+        {
+            $("#cc-decision-box").remove();
+            disabledTextarea();
+            disabledCheckBoxAndStamp();
+        }
         data.processed_receivers.forEach(function(_data) {
             // 締結 or 却下済み受信者取得
             _processedInfo(_data, lists);
             if (_data.receiver === this.myEmail) {
                 $("#cc-decision-box").remove();
+                // disable textarea when receiver approved
+                disabledTextarea();
+                disabledCheckBoxAndStamp();
+                $('.ui-draggable').each(() => {
+                    window.switchBorderBox($(this), 'remove');
+                })
             }
             if (_data.status === "dismissal") {
                 // 却下がある場合
@@ -495,6 +526,12 @@ setProcessedInfo = (data) => {
         // 合意締結証明書
         var certbutton = '<button type="button" class="btn btn-primary" onclick="gotocertificate();"><i class="fa fa-fw fa-file-pdf-o"></i> 合意締結証明書を発行する</button>';
         $('#cc-docs-status > div.box-footer').append(certbutton);
+
+        // disable checkbox not checked and stamp when document is done
+        disabledCheckBoxAndStamp();
+        $('.ui-draggable').each(function() {
+            window.switchBorderBox($(this), 'remove');
+        })
     }
     lists.push('<li><i class="fa fa-clock-o bg-gray"></i></li>');
     lists.forEach(function(v, i) {
@@ -505,6 +542,14 @@ setProcessedInfo = (data) => {
     if ((data.status === "sent" && data.isme) || data.status === "review" || data.status === "reject") {
         // 送付者自信もしくは稟議中ステータスの場合は同意・却下ボタンは削除する。
         $("#cc-decision-box").remove();
+        disabledTextarea();
+        disabledCheckBoxAndStamp();
+        // only isme and status sent
+        if (data.status === 'sent' && data.isme) {
+            $('.ui-draggable').each(function() {
+                window.switchBorderBox($(this), 'remove');
+            })
+        }
     } else {
         $("#cc-document-concluded").attr("style", "display:;");
         $("#cc-document-dismissal").attr("style", "display:;");
@@ -672,5 +717,25 @@ setDocsOriginalInfo = (data) => {
         $("#cc-container").attr("style", "display:block;");
     }).catch(function(result) {
         erralert(JSON.stringify(result));
+    });
+}
+
+// when multipe 
+disabledTextarea = () => {
+     $("#cc-container-dummy textarea").each((i, textarea) => {
+        if ($(textarea).val().match(/\S/g)) {
+            var text = $(textarea).val();
+            $(textarea).replaceWith("<p style='padding: 6px 12px;'>" + text + "</p>");
+        } else {
+            $(textarea).attr('disabled', true);
+        }
+    })
+}
+disabledCheckBoxAndStamp = () => {
+    $("#cc-container-dummy").find('input[type="checkbox"]').attr('disabled', true); // disable checkboxes
+    $("#cc-container-dummy").find('button.electronic-stamp-button').each(function () {
+        if ($(this).find('>img').length < 1) {
+            $(this).attr('disabled', true).text('押印').css('background', '#DFE6ED').css('color','#a1afbc').css('font-size', '14px');
+        }
     });
 }
