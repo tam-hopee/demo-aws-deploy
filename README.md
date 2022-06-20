@@ -14,4 +14,6 @@
     cp ccontract/src/v0/apiGateway-js-sdk/apigClient-dev.js ccontract/src/v0/apiGateway-js-sdk/apigClient.js 
     
     // Open Google Chrome
-    open /Applications/Google\ Chrome.app/ --args --allow-file-access-from-files
+    open /Applications/Google\ Chrome.app/ --args --allow-file-access-from-file
+    
+### feature 1
